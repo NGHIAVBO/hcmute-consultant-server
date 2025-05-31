@@ -17,4 +17,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
 
 # Tăng thời gian chờ khởi động
 EXPOSE 8080
-CMD ["java", "-Xmx384m", "-jar", "-Dspring.datasource.hikari.initialization-fail-timeout=60000", "app.jar"]
+CMD ["sh", "-c", "echo '==== MEMORY INFO ===='; free -h || cat /proc/meminfo; echo '===================='; java -Xmx384m -jar -Dspring.datasource.hikari.initialization-fail-timeout=60000 app.jar"]

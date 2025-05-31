@@ -7,14 +7,8 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Thiết lập các biến môi trường cần thiết
-ENV SERVER_PORT=8080
+ENV SERVER_PORT=9090
 ENV RAILWAY_ENV=true
 
-# Thêm health check để Railway biết khi nào ứng dụng đã sẵn sàng
-HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/api/v1/health || exit 1
-
-# Tăng thời gian chờ khởi động
-EXPOSE 8080
+EXPOSE 9090
 CMD ["java", "-jar", "-Dspring.datasource.hikari.initialization-fail-timeout=60000", "app.jar"]

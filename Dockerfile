@@ -1,27 +1,17 @@
-FROM maven:3.8.5-openjdk-17 AS build
-
+# Use Maven to build the application
+FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-COPY . .
-
-RUN mvn clean package -DskipTests -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
-
-FROM openjdk:17-jdk-slim
-
+# Use a lightweight JRE to run the application
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-COPY --from=build /app/target/*.jar HcmuteConsultantServer.jar
+# Expose the port the app runs on
+EXPOSE 9090
 
-ENV SERVER_PORT=8080
-
-ENV RAILWAY_ENV=true
-
-
-
-HEALTHCHECK --interval=30s --timeout=30s --start-period=60s --retries=3 \
-
-  CMD curl -f http://localhost:8080/api/v1/health || exit 1
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "-Dspring.datasource.hikari.initialization-fail-timeout=60000", "HcmuteConsultantServer.jar"]
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]

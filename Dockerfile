@@ -7,6 +7,9 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/HcmuteConsultantServer.jar app.jar
 
+# Cài đặt gói procps để sử dụng lệnh free
+RUN apt-get update && apt-get install -y procps
+
 # Thiết lập các biến môi trường cần thiết
 ENV SERVER_PORT=8080
 ENV RAILWAY_ENV=true

@@ -5,10 +5,10 @@ RUN mvn clean package -DskipTests -Dmaven.wagon.http.ssl.insecure=true -Dmaven.w
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target/HcmuteConsultantServer.jar HcmuteConsultantServer.jar
 
 ENV SERVER_PORT=9090
 ENV RAILWAY_ENV=true
 
 EXPOSE 9090
-CMD ["java", "-jar", "-Dspring.datasource.hikari.initialization-fail-timeout=60000", "app.jar"]
+CMD ["java", "-jar", "-Dspring.datasource.hikari.initialization-fail-timeout=60000", "HcmuteConsultantServer.jar"]

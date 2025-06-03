@@ -135,23 +135,31 @@ public class CommentServiceImpl implements ICommentService {
     }
 
     @Override
+    @Transactional
     public void deleteComment(Integer idComment, String email) {
-        Optional<CommentEntity> commentOpt = commentRepository.findById(idComment);
-        if (commentOpt.isEmpty()) {
-            throw new ErrorException("Không tìm thấy bình luận.");
-        }
-
-        CommentEntity comment = commentOpt.get();
+        CommentEntity comment = commentRepository.findById(idComment)
+                .orElseThrow(() -> new ErrorException("Không tìm thấy bình luận."));
 
         if (!comment.getUserComment().getAccount().getEmail().equals(email)) {
             throw new ErrorException("Bạn không có quyền xóa bình luận này.");
         }
 
         List<CommentEntity> children = commentRepository.getCommentByParentComment(idComment);
-        children.forEach(cmt -> deleteComment(cmt.getIdComment(), email));
+
+        for (CommentEntity child : children) {
+            String childEmail = child.getUserComment().getAccount().getEmail();
+
+            if (childEmail.equals(email)) {
+                deleteComment(child.getIdComment(), email);
+            } else {
+                child.setParentComment(null);
+                commentRepository.save(child);
+            }
+        }
 
         commentRepository.deleteById(idComment);
     }
+
 
     @Override
     public void adminDeleteComment(Integer idComment) {

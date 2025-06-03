@@ -143,10 +143,6 @@ public class GuestServiceImpl implements IGuestService {
             LocalDate endDate, Pageable pageable) {
         Specification<CommonQuestionEntity> spec = Specification.where(CommonQuestionSpecification.hasStatusTrue());
 
-        if (departmentId != null) {
-            spec = spec.and(CommonQuestionSpecification.isCreatedByAdvisor(departmentId));
-        }
-
         if (title != null && !title.isEmpty()) {
             spec = spec.and(CommonQuestionSpecification.hasTitle(title));
         }

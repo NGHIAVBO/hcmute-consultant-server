@@ -421,7 +421,7 @@ public class ConsultationScheduleController {
                 .build());
     }
 
-    @PreAuthorize(SecurityConstants.PreAuthorize.USER)
+    @PreAuthorize(SecurityConstants.PreAuthorize.USER + " or " + SecurityConstants.PreAuthorize.TUVANVIEN + " or " + SecurityConstants.PreAuthorize.TRUONGBANTUVAN + " or " + SecurityConstants.PreAuthorize.ADMIN)
     @PostMapping("/user/consultation-schedule/check")
     public ResponseEntity<DataResponse<Boolean>> checkParticipation(
             @RequestParam Integer scheduleId, Principal principal) {

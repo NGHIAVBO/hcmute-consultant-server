@@ -33,13 +33,13 @@ public class CommonQuestionSpecification {
     }
 
     public static Specification<CommonQuestionEntity> hasDepartment(Integer departmentId) {
-        return (Root<CommonQuestionEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
-            if (departmentId == null) {
-                return null;
-            }
-            return criteriaBuilder.equal(root.get("department").get("id"), departmentId);
-        };
+        return (root, query, criteriaBuilder) ->
+        criteriaBuilder.equal(
+            root.get("createdBy").get("account").get("department").get("id"),
+            departmentId
+        );
     }
+
 
     public static Specification<CommonQuestionEntity> hasTitle(String title) {
         return (Root<CommonQuestionEntity> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {

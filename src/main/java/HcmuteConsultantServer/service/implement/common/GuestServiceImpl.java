@@ -140,8 +140,12 @@ public class GuestServiceImpl implements IGuestService {
 
     @Override
     public Page<CommonQuestionDTO> getCommonQuestion(Integer departmentId, String title, LocalDate startDate,
-            LocalDate endDate, Pageable pageable) {
+                                                     LocalDate endDate, Pageable pageable) {
         Specification<CommonQuestionEntity> spec = Specification.where(CommonQuestionSpecification.hasStatusTrue());
+
+        if (departmentId != null) {
+            spec = spec.and(CommonQuestionSpecification.hasDepartment(departmentId));
+        }
 
         if (title != null && !title.isEmpty()) {
             spec = spec.and(CommonQuestionSpecification.hasTitle(title));
@@ -158,6 +162,7 @@ public class GuestServiceImpl implements IGuestService {
         Page<CommonQuestionEntity> commonQuestions = commonQuestionRepository.findAll(spec, pageable);
         return commonQuestions.map(commonQuestionMapper::mapToDTO);
     }
+
 
     @Override
     public List<DepartmentDTO> getAllDepartment() {

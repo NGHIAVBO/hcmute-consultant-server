@@ -135,6 +135,7 @@ public class CommonQuestionController {
             @RequestParam("answerContent") String answerContent,
             @RequestPart(value = "file", required = false) MultipartFile file,
             @RequestPart(value = "fileAnswer", required = false) MultipartFile fileAnswer,
+            @RequestParam(value = "status", required = false) Boolean status,
             Principal principal) {
 
         String email = principal.getName();
@@ -158,7 +159,9 @@ public class CommonQuestionController {
                 .answerTitle(answerTitle)
                 .answerContent(answerContent)
                 .build();
-
+        if (isAdmin && status != null) {
+            request.setStatus(status);
+        }
         return commonQuestionService.updateCommonQuestion(commonQuestionId, file, fileAnswer, request);
     }
 

@@ -170,8 +170,9 @@ public class CommonQuestionServiceImpl implements ICommonQuestionService {
         existingCommonQuestion.setContent(request.getContent());
         existingCommonQuestion.setAnswerTitle(request.getAnswerTitle());
         existingCommonQuestion.setAnswerContent(request.getAnswerContent());
-        existingCommonQuestion.setStatus(request.getStatus());
-
+        if (request.getStatus() != null) {
+            existingCommonQuestion.setStatus(request.getStatus());
+        }
         handleFile(existingCommonQuestion, file);
 
         handleFileAnswer(existingCommonQuestion, fileAnswer);
